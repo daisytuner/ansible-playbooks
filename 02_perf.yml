@@ -1,0 +1,35 @@
+- name: Setup Perf
+  hosts: all
+  become: yes
+  tasks:
+
+    - name: Install Perf
+      package:
+        name:
+          - linux-tools-common
+          - linux-tools-generic
+        state: present
+      become: yes
+
+    - name: Set perf_event_paranoid at runtime
+      ansible.builtin.command: sysctl -w kernel.perf_event_paranoid=-1
+
+    - name: Set kptr_restrict at runtime
+      ansible.builtin.command: sysctl -w kernel.kptr_restrict=0
+
+    - name: Ensure perf_event_paranoid is persisted
+      ansible.builtin.lineinfile:
+        path: /etc/sysctl.d/99-perf.conf
+        line: "kernel.perf_event_paranoid=-1"
+        create: yes
+        mode: "0644"
+
+    - name: Ensure kptr_restrict is persisted
+      ansible.builtin.lineinfile:
+        path: /etc/sysctl.d/99-perf.conf
+        line: "kernel.kptr_restrict=0"
+        create: yes
+        mode: "0644"
+
+    - name: Apply sysctl changes
+      ansible.builtin.command: sysctl --system

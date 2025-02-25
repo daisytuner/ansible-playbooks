@@ -1,0 +1,80 @@
+- name: Setup Singularity
+  hosts: raspi5
+  become: yes
+  vars:
+    singularity_src_url: "https://github.com/sylabs/singularity/releases/download/v4.2.2/singularity-ce-4.2.2.tar.gz"
+    singularity_build_dir: "/tmp/singularity-ce-4.2.2"
+  tasks:
+
+    - name: Install Dependencies
+      package:
+        name:
+          - autoconf
+          - automake
+          - cryptsetup
+          - fuse2fs
+          - git
+          - fuse
+          - libfuse-dev
+          - libglib2.0-dev
+          - libseccomp-dev
+          - libtool
+          - pkg-config
+          - runc
+          - squashfs-tools
+          - squashfs-tools-ng
+          - uidmap
+          - wget
+          - zlib1g-dev
+        state: present
+      become: yes
+
+    - name: Download singularity source code
+      get_url:
+        url: "{{ singularity_src_url }}"
+        dest: "/tmp/singularity-ce-4.2.2.tar.gz.tar.bz2"
+        mode: '0644'
+
+    - name: Extract singularity source
+      ansible.builtin.unarchive:
+        src: "/tmp/singularity-ce-4.2.2.tar.gz.tar.bz2"
+        dest: "/tmp/"
+        remote_src: yes
+
+    - name: Configure singularity
+      command:
+        cmd: ./mconfig
+        chdir: "{{ singularity_build_dir }}"
+
+    - name: Compile singularity
+      command:
+        cmd: make -j$(nproc) -C builddir
+        chdir: "{{ singularity_build_dir }}"
+
+    - name: Install singularity
+      command:
+        cmd: make -C builddir install
+        chdir: "{{ singularity_build_dir }}"
+
+    - name: Configure AppArmor for SingularityCE
+      ansible.builtin.copy:
+        dest: /etc/apparmor.d/singularity-ce
+        content: |
+          # Permit unprivileged user namespace creation for SingularityCE starter
+          abi <abi/4.0>,
+          include <tunables/global>
+
+          profile singularity-ce /usr/local/libexec/singularity/bin/starter{,-suid} flags=(unconfined) {
+            userns,
+
+            # Site-specific additions and overrides. See local/README for details.
+            include if exists <local/singularity-ce>
+          }
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Reload AppArmor
+      ansible.builtin.systemd:
+        name: apparmor
+        state: reloaded
