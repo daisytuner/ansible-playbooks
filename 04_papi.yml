@@ -1,0 +1,60 @@
+- name: Setup PAPI
+  hosts: raspi5
+  become: yes
+  vars:
+    papi_src_url: "https://github.com/icl-utk-edu/papi/archive/refs/heads/master.zip"
+    papi_build_dir: "/tmp/papi-master"
+  tasks:
+
+    - name: Install Dependencies
+      package:
+        name:
+          - unzip
+        state: present
+      become: yes
+
+    - name: Download source code
+      get_url:
+        url: "{{ papi_src_url }}"
+        dest: "/tmp/master.zip"
+        mode: '0644'
+
+    - name: Extract source
+      ansible.builtin.unarchive:
+        src: "/tmp/master.zip"
+        dest: "/tmp/"
+        remote_src: yes
+
+    - name: Configure
+      command:
+        cmd: ./configure --prefix=/opt/papi
+        chdir: "{{ papi_build_dir }}/src"
+
+    - name: Compile
+      command:
+        cmd: make
+        chdir: "{{ papi_build_dir }}/src"
+
+    - name: Install
+      command:
+        cmd: make install
+        chdir: "{{ papi_build_dir }}/src"
+
+    - name: Add PAPI paths to ~/.bashrc
+      ansible.builtin.blockinfile:
+        path: ~/.bashrc
+        block: |
+          # PAPI environment variables
+          export PATH=$PATH:/opt/papi/bin
+          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/papi/lib
+          export CPATH=$CPATH:/opt/papi/include
+          export LIBRARY_PATH=$LIBRARY_PATH:/opt/papi/lib
+        marker: "# {mark} ANSIBLE MANAGED BLOCK"
+        create: yes
+        state: present
+
+    - name: Source ~/.bashrc
+      ansible.builtin.shell: source ~/.bashrc
+      args:
+        executable: /bin/bash
+      changed_when: false

@@ -1,5 +1,5 @@
 - name: Setup Singularity
-  hosts: raspi5
+  hosts: all
   become: yes
   vars:
     singularity_src_url: "https://github.com/sylabs/singularity/releases/download/v4.2.2/singularity-ce-4.2.2.tar.gz"
@@ -29,6 +29,39 @@
         state: present
       become: yes
 
+    - name: Set Go version and architecture
+      ansible.builtin.set_fact:
+        go_version: "1.23.4"
+        go_os: "linux"
+        go_arch: "arm64"
+
+    - name: Download Go binary
+      ansible.builtin.get_url:
+        url: "https://dl.google.com/go/go{{ go_version }}.{{ go_os }}-{{ go_arch }}.tar.gz"
+        dest: "/tmp/go{{ go_version }}.{{ go_os }}-{{ go_arch }}.tar.gz"
+        mode: "0644"
+
+    - name: Extract Go archive to /usr/local
+      ansible.builtin.unarchive:
+        src: "/tmp/go{{ go_version }}.{{ go_os }}-{{ go_arch }}.tar.gz"
+        dest: "/usr/local"
+        remote_src: yes
+        extra_opts: [--strip-components=1]
+        mode: "0755"
+
+    - name: Add Go binary path to ~/.bashrc
+      ansible.builtin.lineinfile:
+        path: ~/.bashrc
+        line: 'export PATH=$PATH:/usr/local/go/bin'
+        create: yes
+        state: present
+
+    - name: Source ~/.bashrc
+      ansible.builtin.shell: source ~/.bashrc
+      args:
+        executable: /bin/bash
+      changed_when: false
+
     - name: Download singularity source code
       get_url:
         url: "{{ singularity_src_url }}"
@@ -48,7 +81,7 @@
 
     - name: Compile singularity
       command:
-        cmd: make -j$(nproc) -C builddir
+        cmd: make -C builddir
         chdir: "{{ singularity_build_dir }}"
 
     - name: Install singularity
