@@ -1,0 +1,42 @@
+- name: Setup Daisytuner CLI
+  hosts: raspi5
+  become: true
+  vars:
+    snap_file: daisytuner-cli_0.0.2_arm64.snap
+    src_snap_path: "/home/daisy/ansible-playbooks/{{ snap_file }}"
+    dest_snap_path: "/home/daisy/{{ snap_file }}"
+    credentials_src: "/home/daisy/.credentials/"
+    credentials_dest: "/var/snap/daisytuner-cli/common/.credentials/"
+    jobs_dir: "/var/snap/daisytuner-cli/common/jobs"
+  tasks:
+    - name: Copy snap file to remote
+      copy:
+        src: "{{ src_snap_path }}"
+        dest: "{{ dest_snap_path }}"
+        owner: daisy
+        mode: '0644'
+
+    - name: Install snap package
+      command: "snap install {{ dest_snap_path }} --dangerous"
+
+    - name: Remove snap file after installation
+      file:
+        path: "{{ dest_snap_path }}"
+        state: absent
+
+    - name: Copy credentials to remote
+      copy:
+        src: "{{ credentials_src }}"
+        dest: "{{ credentials_dest }}"
+        owner: root
+        group: root
+        mode: '0600'
+
+    - name: Create jobs directory
+      file:
+        path: "{{ jobs_dir }}"
+        state: directory
+        owner: root
+        group: root
+        mode: '0777'
+

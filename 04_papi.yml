@@ -1,5 +1,5 @@
 - name: Setup PAPI
-  hosts: raspi5
+  hosts: all
   become: yes
   vars:
     papi_src_url: "https://github.com/icl-utk-edu/papi/archive/refs/heads/master.zip"
