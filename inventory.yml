@@ -85,12 +85,20 @@ all:
 
     jetson:
       hosts:
-        orin-0001:
+        jetson-0001:
           ansible_host: 192.168.0.20
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
-        orin-0002:
+        jetson-0002:
           ansible_host: 192.168.0.21
+          ansible_user: daisy
+          ansible_python_interpreter: /usr/bin/python3
+        jetson-0003:
+          ansible_host: 192.168.0.22
+          ansible_user: daisy
+          ansible_python_interpreter: /usr/bin/python3
+        jetson-0004:
+          ansible_host: 192.168.0.23
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
 

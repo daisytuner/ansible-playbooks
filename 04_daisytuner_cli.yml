@@ -1,8 +1,8 @@
 - name: Setup Daisytuner CLI
-  hosts: raspi4
+  hosts: jetson
   become: true
   vars:
-    snap_file: daisytuner-cli_0.0.5_arm64.snap
+    snap_file: daisytuner-cli_0.0.7_arm64.snap
     src_snap_path: "/home/daisy/ansible-playbooks/{{ snap_file }}"
     dest_snap_path: "/home/daisy/{{ snap_file }}"
     credentials_src: "/home/daisy/.credentials/"
@@ -30,3 +30,6 @@
         owner: root
         group: root
         mode: '0600'
+
+    - name: Restart snap 
+      command: "snap restart daisytuner-cli.daisytuner-runner"
