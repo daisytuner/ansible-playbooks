@@ -1,0 +1,110 @@
+---
+- name: Setup Coral TPU with Miniforge
+  hosts: raspi4
+  become: true
+  vars:
+    user_home: "/home/{{ ansible_user }}"
+    miniforge_url: "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-aarch64.sh"
+    miniforge_dir: "{{ user_home }}/miniforge3"
+    conda_bin: "{{ miniforge_dir }}/bin/conda"
+    env_name: "coral"
+    tflite_wheel_url: "https://github.com/google-coral/pycoral/releases/download/v2.0.0/tflite_runtime-2.5.0.post1-cp38-cp38-linux_aarch64.whl"
+    pycoral_wheel_url: "https://github.com/google-coral/pycoral/releases/download/v2.0.0/pycoral-2.0.0-cp38-cp38-linux_aarch64.whl"
+
+  tasks:
+    - name: Update APT package cache
+      apt:
+        update_cache: yes
+
+    - name: Install required system dependencies
+      apt:
+        name:
+          - curl
+          - gnupg
+          - udev
+          - libgdal-dev
+        state: present
+
+    - name: Add Coral APT key
+      apt_key:
+        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+        state: present
+
+    - name: Add Coral repository
+      apt_repository:
+        repo: "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main"
+        state: present
+        filename: "coral-edgetpu"
+
+    - name: Install Edge TPU runtime
+      apt:
+        name: libedgetpu1-std
+        state: present
+
+    - name: Set up udev rules for Coral USB devices
+      copy:
+        dest: /etc/udev/rules.d/71-edgetpu.rules
+        content: |
+          SUBSYSTEM=="usb", ATTRS{idVendor}=="18d1", GROUP="plugdev", MODE="0666"
+
+    - name: Reload udev rules
+      command: udevadm control --reload-rules
+
+    - name: Trigger udev rules
+      command: udevadm trigger
+
+    - name: Download Miniforge installer
+      get_url:
+        url: "{{ miniforge_url }}"
+        dest: "{{ user_home }}/Miniforge3.sh"
+        mode: '0755'
+
+    - name: Install Miniforge
+      command:
+        cmd: "{{ user_home }}/Miniforge3.sh -b -p {{ miniforge_dir }}"
+        creates: "{{ miniforge_dir }}/bin/conda"
+
+    - name: Initialize Miniforge for the user
+      shell: "{{ conda_bin }} init"
+      args:
+        executable: /bin/bash
+
+    - name: Create Conda environment with Python 3.8
+      shell: "{{ conda_bin }} create -y -n {{ env_name }} python=3.8"
+      args:
+        executable: /bin/bash
+        creates: "{{ miniforge_dir }}/envs/{{ env_name }}"
+
+    - name: Download and install `tflite-runtime`
+      shell: "{{ conda_bin }} run -n {{ env_name }} pip install {{ tflite_wheel_url }}"
+      args:
+        executable: /bin/bash
+
+    - name: Download and install `pycoral`
+      shell: "{{ conda_bin }} run -n {{ env_name }} pip install {{ pycoral_wheel_url }}"
+      args:
+        executable: /bin/bash
+
+    - name: Clone PyCoral GitHub repository
+      git:
+        repo: "https://github.com/google-coral/pycoral.git"
+        dest: "{{ user_home }}/pycoral"
+        clone: yes
+        update: yes
+
+    - name: Install example dependencies for `classify_image.py`
+      shell: "{{ conda_bin }} run -n {{ env_name }} bash examples/install_requirements.sh classify_image.py"
+      args:
+        chdir: "{{ user_home }}/pycoral"
+        executable: /bin/bash
+
+    - name: Run PyCoral Image Classification Example
+      shell: "{{ conda_bin }} run -n {{ env_name }} python3 examples/classify_image.py --model test_data/mobilenet_v2_1.0_224_inat_bird_quant_edgetpu.tflite --labels test_data/inat_bird_labels.txt --input test_data/parrot.jpg"
+      args:
+        chdir: "{{ user_home }}/pycoral"
+        executable: /bin/bash
+      register: inference_output
+
+    - name: Display inference output
+      debug:
+        msg: "{{ inference_output.stdout }}"
