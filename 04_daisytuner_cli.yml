@@ -23,13 +23,14 @@
         path: "{{ dest_snap_path }}"
         state: absent
 
-    - name: Copy credentials to remote
-      copy:
-        src: "{{ credentials_src }}"
-        dest: "{{ credentials_dest }}"
-        owner: root
-        group: root
-        mode: '0600'
+    # Only necessary on first installation
+    # - name: Copy credentials to remote
+    #   copy:
+    #     src: "{{ credentials_src }}"
+    #     dest: "{{ credentials_dest }}"
+    #     owner: root
+    #     group: root
+    #     mode: '0600'
 
     - name: Restart snap 
       command: "snap restart daisytuner-cli.daisytuner-runner"
