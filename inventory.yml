@@ -1,6 +1,8 @@
 all:
   hosts: {}
   children:
+    
+    # Partition: bellis4
     raspi4:
       hosts:
         raspi4-0001:
@@ -27,11 +29,16 @@ all:
           ansible_host: 192.168.0.15
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
+    
+    # Partition: bellis4-ci
+    raspi4-ci:
+      hosts:
         raspi4-0007:
           ansible_host: 192.168.0.16
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
 
+    # Partition: bellis5
     raspi5:
       hosts:
         raspi5-0001:
@@ -78,11 +85,16 @@ all:
           ansible_host: 192.168.0.40
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
+
+    # Partition: bellis5-ci
+    raspi5-ci:
+      hosts:
         raspi5-0012:
           ansible_host: 192.168.0.41
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
 
+    # Partition: tansy
     jetson:
       hosts:
         jetson-0001:
@@ -97,6 +109,10 @@ all:
           ansible_host: 192.168.0.22
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
+
+    # Partition: tansy-ci
+    jetson-ci:
+      hosts:
         jetson-0004:
           ansible_host: 192.168.0.23
           ansible_user: daisy
@@ -105,6 +121,8 @@ all:
     all_nodes:
       children:
         raspi4:
+        raspi4-ci:
         raspi5:
+        raspi5-ci:
         jetson:
-
+        jetson-ci:
