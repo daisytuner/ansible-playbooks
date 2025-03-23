@@ -1,0 +1,76 @@
+---
+- name: Build and install perf on Jetson (JetPack 6.0.1 / L4T 36.4.3)
+  hosts: jetson
+  become: true
+  vars:
+    temp_dir: "/tmp/l4t_perf_build"
+    public_sources_url: "https://developer.nvidia.com/downloads/embedded/l4t/r36_release_v4.3/sources/public_sources.tbz2"
+    perf_dir: "{{ temp_dir }}/kernel/kernel-jammy-src/tools/perf"
+
+  tasks:
+    - name: Install dependencies for building perf
+      apt:
+        name:
+          - libperl-dev
+          - build-essential
+          - flex
+          - bison
+          - libelf-dev
+          - libdw-dev
+          - libiberty-dev
+          - zlib1g-dev
+          - libnuma-dev
+          - python3-dev
+          - binutils-dev
+          - libcap-dev
+          - libssl-dev
+          - libunwind-dev
+          - libzstd-dev
+        state: present
+        update_cache: yes
+
+    - name: Ensure temp build directory exists
+      file:
+        path: "{{ temp_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Download L4T public sources
+      get_url:
+        url: "{{ public_sources_url }}"
+        dest: "{{ temp_dir }}/public_sources.tbz2"
+
+    - name: Extract public_sources.tbz2
+      command:
+        cmd: tar -xjf public_sources.tbz2
+        chdir: "{{ temp_dir }}"
+
+    - name: Extract kernel_src.tbz2
+      command:
+        cmd: tar -xjf Linux_for_Tegra/source/kernel_src.tbz2
+        chdir: "{{ temp_dir }}"
+
+    - name: Build perf
+      command:
+        cmd: make -j4
+        chdir: "{{ perf_dir }}"
+
+    - name: Install perf
+      make:
+        chdir: "{{ perf_dir }}"
+        target: install
+        params:
+          prefix: "/usr/local"
+
+    - name: Cleanup temporary directory
+      file:
+        path: "{{ temp_dir }}"
+        state: absent
+
+    - name: Verify perf is installed
+      command: perf --version
+      register: perf_version
+
+    - name: Show installed perf version
+      debug:
+        msg: "Installed perf version: {{ perf_version.stdout }}"
