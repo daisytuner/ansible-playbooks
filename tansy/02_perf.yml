@@ -1,6 +1,6 @@
 ---
 - name: Build and install perf on Jetson (JetPack 6.0.1 / L4T 36.4.3)
-  hosts: jetson
+  hosts: jetson,jetson-ci
   become: true
   vars:
     temp_dir: "/tmp/l4t_perf_build"
