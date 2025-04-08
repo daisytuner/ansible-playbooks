@@ -1,0 +1,27 @@
+---
+- name: Copy Token to DaisyTuner Session File
+  hosts: raspi4,raspi5,jetson
+  become: yes
+  tasks:
+    - name: Ensure the directory exists
+      file:
+        path: /var/lib/daisytuner
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Remove existing session directory if it exists (with root privileges)
+      file:
+        path: /var/lib/daisytuner/session
+        state: absent
+      become: yes
+      become_user: root
+
+    - name: Copy token file as session file
+      copy:
+        src: /home/daisy/ansible-playbooks/session  # Replace with actual local token path
+        dest: /var/lib/daisytuner/session
+        owner: root
+        group: root
+        mode: '0644'
