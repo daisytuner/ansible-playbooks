@@ -1,8 +1,9 @@
 - name: Setup Daisytuner CLI
-  hosts: raspi4,raspi5,jetson
+  hosts: chamomile-0004
   become: true
   vars:
-    snap_file: daisytuner-cli_0.0.12_arm64.snap
+    snap_version: "0.0.13"
+    snap_file: "{{ snap_file | regex_replace('{{ snap_version }}', snap_version) }}"
     src_snap_path: "/home/daisy/ansible-playbooks/{{ snap_file }}"
     dest_snap_path: "/home/daisy/{{ snap_file }}"
     credentials_src: "/home/daisy/.credentials/"
@@ -24,13 +25,13 @@
         state: absent
 
     # Only necessary on first installation
-    # - name: Copy credentials to remote
-    #   copy:
-    #     src: "{{ credentials_src }}"
-    #     dest: "{{ credentials_dest }}"
-    #     owner: root
-    #     group: root
-    #     mode: '0600'
+    - name: Copy credentials to remote
+      copy:
+        src: "{{ credentials_src }}"
+        dest: "{{ credentials_dest }}"
+        owner: root
+        group: root
+        mode: '0600'
 
     - name: Restart snap 
       command: "snap restart daisytuner-cli.daisytuner-runner"
