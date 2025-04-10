@@ -6,27 +6,23 @@ all:
     raspi4:
       hosts:
         raspi4-0001:
-          ansible_host: 192.168.0.10
+          ansible_host: 192.168.42.87
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
         raspi4-0002:
-          ansible_host: 192.168.0.11
+          ansible_host: 192.168.42.91
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
         raspi4-0003:
-          ansible_host: 192.168.0.12
+          ansible_host: 192.168.42.88
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
         raspi4-0004:
-          ansible_host: 192.168.0.13
+          ansible_host: 192.168.42.101
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
         raspi4-0005:
-          ansible_host: 192.168.0.14
-          ansible_user: daisy
-          ansible_python_interpreter: /usr/bin/python3
-        raspi4-0006:
-          ansible_host: 192.168.0.15
+          ansible_host: 192.168.42.98
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
     
@@ -34,7 +30,7 @@ all:
     raspi4-ci:
       hosts:
         raspi4-0007:
-          ansible_host: 192.168.0.16
+          ansible_host: 192.168.42.100
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
 
@@ -42,47 +38,47 @@ all:
     raspi5:
       hosts:
         raspi5-0001:
-          ansible_host: 192.168.0.30
+          ansible_host: 192.168.42.89
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
         raspi5-0002:
-          ansible_host: 192.168.0.31
+          ansible_host: 192.168.42.90
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
         raspi5-0003:
-          ansible_host: 192.168.0.32
+          ansible_host: 192.168.42.96
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
         raspi5-0004:
-          ansible_host: 192.168.0.33
+          ansible_host: 192.168.42.85
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
         raspi5-0005:
-          ansible_host: 192.168.0.34
+          ansible_host: 192.168.42.94
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
         raspi5-0006:
-          ansible_host: 192.168.0.35
+          ansible_host: 192.168.42.95
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
         raspi5-0007:
-          ansible_host: 192.168.0.36
+          ansible_host: 192.168.42.102
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
         raspi5-0008:
-          ansible_host: 192.168.0.37
+          ansible_host: 192.168.42.97
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
         raspi5-0009:
-          ansible_host: 192.168.0.38
+          ansible_host: 192.168.42.93
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
         raspi5-0010:
-          ansible_host: 192.168.0.39
+          ansible_host: 192.168.42.92
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
         raspi5-0011:
-          ansible_host: 192.168.0.40
+          ansible_host: 192.168.42.99
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
 
@@ -90,7 +86,7 @@ all:
     raspi5-ci:
       hosts:
         raspi5-0012:
-          ansible_host: 192.168.0.41
+          ansible_host: 192.168.42.86
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
 
@@ -98,15 +94,15 @@ all:
     jetson:
       hosts:
         jetson-0001:
-          ansible_host: 192.168.0.20
+          ansible_host: 192.168.42.103
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
         jetson-0002:
-          ansible_host: 192.168.0.21
+          ansible_host: 192.168.42.104
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
         jetson-0003:
-          ansible_host: 192.168.0.22
+          ansible_host: 192.168.42.105
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
 
@@ -114,7 +110,23 @@ all:
     jetson-ci:
       hosts:
         jetson-0004:
-          ansible_host: 192.168.0.23
+          ansible_host: 192.168.42.106
+          ansible_user: daisy
+          ansible_python_interpreter: /usr/bin/python3
+
+    # Partition: zinnia-ci
+    zinnia-ci:
+      hosts:
+        zinnia-0004:
+          ansible_host: 192.168.42.118
+          ansible_user: daisy
+          ansible_python_interpreter: /usr/bin/python3
+
+    # Partition: chamomile-ci
+    chamomile-ci:
+      hosts:
+        chamomile-0004:
+          ansible_host: 192.168.42.108
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
 
@@ -126,3 +138,5 @@ all:
         raspi5-ci:
         jetson:
         jetson-ci:
+        zinnia-ci:
+        chamomile-ci:
