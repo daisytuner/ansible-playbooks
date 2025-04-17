@@ -127,8 +127,8 @@ all:
           ansible_host: 192.168.42.106
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
-        vars:
-          snap_file: daisytuner-cli_{{ snap_version }}_arm64.snap
+      vars:
+        snap_file: daisytuner-cli_{{ snap_version }}_arm64.snap
 
     # Partition: zinnia-ci
     zinnia-ci:
@@ -137,8 +137,18 @@ all:
           ansible_host: 192.168.42.118
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
-        vars:
-          snap_file: daisytuner-cli_{{ snap_version }}_amd64.snap
+      vars:
+        snap_file: daisytuner-cli_{{ snap_version }}_amd64.snap
+
+    # Partition: zinnia
+    zinnia:
+      hosts:
+        zinnia-0003:
+          ansible_host: 192.168.42.79
+          ansible_user: daisy
+          ansible_python_interpreter: /usr/bin/python3
+      vars:
+        snap_file: daisytuner-cli_{{ snap_version }}_amd64.snap
 
     # Partition: chamomile-ci
     chamomile-ci:
@@ -147,8 +157,18 @@ all:
           ansible_host: 192.168.42.108
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
-        vars:
-          snap_file: daisytuner-cli_{{ snap_version }}_amd64.snap
+      vars:
+        snap_file: daisytuner-cli_{{ snap_version }}_amd64.snap
+
+    # Partition: chamomile
+    chamomile:
+      hosts:
+        chamomile-0003:
+          ansible_host: 192.168.42.78
+          ansible_user: daisy
+          ansible_python_interpreter: /usr/bin/python3
+      vars:
+        snap_file: daisytuner-cli_{{ snap_version }}_amd64.snap
 
     all_nodes:
       children:
@@ -160,3 +180,5 @@ all:
         jetson-ci:
         zinnia-ci:
         chamomile-ci:
+        zinnia:
+        chamomile:

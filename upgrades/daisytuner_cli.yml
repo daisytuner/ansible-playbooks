@@ -2,7 +2,7 @@
   hosts: chamomile-0004
   become: true
   vars:
-    snap_version: "0.0.13"
+    snap_version: "0.0.14"
     snap_file: "{{ snap_file | regex_replace('{{ snap_version }}', snap_version) }}"
     src_snap_path: "/home/daisy/ansible-playbooks/{{ snap_file }}"
     dest_snap_path: "/home/daisy/{{ snap_file }}"
