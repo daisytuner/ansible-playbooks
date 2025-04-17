@@ -1,14 +1,18 @@
 - name: Setup Daisytuner CLI
-  hosts: chamomile-0004
+  hosts: chamomile,zinnia,tansy,bellis4,bellis5
   become: true
   vars:
-    snap_version: "0.0.14"
-    snap_file: "{{ snap_file | regex_replace('{{ snap_version }}', snap_version) }}"
-    src_snap_path: "/home/daisy/ansible-playbooks/{{ snap_file }}"
-    dest_snap_path: "/home/daisy/{{ snap_file }}"
-    credentials_src: "/home/daisy/.credentials/"
-    credentials_dest: "/var/snap/daisytuner-cli/common/.credentials/"
+    snap_version: "0.1.0"
   tasks:
+    - name: Define snap_file with templated version
+      set_fact:
+        snap_file: "{{ snap_file | regex_replace('\\{\\{ snap_version \\}\\}', snap_version) }}"
+
+    - name: Set path variables based on snap_file
+      set_fact:
+        src_snap_path: "/home/daisy/ansible-playbooks/{{ snap_file }}"
+        dest_snap_path: "/home/daisy/{{ snap_file }}"
+
     - name: Copy snap file to remote
       copy:
         src: "{{ src_snap_path }}"
@@ -24,14 +28,5 @@
         path: "{{ dest_snap_path }}"
         state: absent
 
-    # Only necessary on first installation
-    - name: Copy credentials to remote
-      copy:
-        src: "{{ credentials_src }}"
-        dest: "{{ credentials_dest }}"
-        owner: root
-        group: root
-        mode: '0600'
-
-    - name: Restart snap 
+    - name: Restart snap
       command: "snap restart daisytuner-cli.daisytuner-runner"
