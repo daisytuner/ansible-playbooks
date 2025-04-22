@@ -33,7 +33,6 @@
       ansible.builtin.set_fact:
         go_version: "1.23.4"
         go_os: "linux"
-        go_arch: "arm64"
 
     - name: Download Go binary
       ansible.builtin.get_url:

@@ -1,0 +1,19 @@
+- name: Install bubblewrap on Linux
+  hosts: all
+  become: true
+
+  vars:
+    bubblewrap_package_name_debian: bubblewrap
+    bubblewrap_package_name_redhat: bubblewrap
+
+  tasks:
+    - name: Gather facts
+      ansible.builtin.setup:
+
+    - name: Install bubblewrap on Debian-based systems
+      ansible.builtin.apt:
+        name: "{{ bubblewrap_package_name_debian }}"
+        state: present
+        update_cache: yes
+      when: ansible_facts['os_family'] == "Debian"
+

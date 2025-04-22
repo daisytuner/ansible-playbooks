@@ -1,12 +1,14 @@
 - name: Setup Daisytuner CLI
-  hosts: chamomile,zinnia,tansy,bellis4,bellis5
+  hosts: jetson,raspi4,raspi5,chamomile,zinnia
   become: true
   vars:
     snap_version: "0.1.0"
   tasks:
-    - name: Define snap_file with templated version
+    - name: Re-template snap_file using snap_version
       set_fact:
-        snap_file: "{{ snap_file | regex_replace('\\{\\{ snap_version \\}\\}', snap_version) }}"
+        snap_file: "{{ snap_file_templated }}"
+      vars:
+        snap_file_templated: "{{ snap_file }}"
 
     - name: Set path variables based on snap_file
       set_fact:
@@ -20,6 +22,9 @@
         owner: daisy
         mode: '0644'
 
+    - name: Remove old snap
+      command: "snap remove daisytuner-cli"
+
     - name: Install snap package
       command: "snap install {{ dest_snap_path }} --dangerous --classic"
 
@@ -28,5 +33,5 @@
         path: "{{ dest_snap_path }}"
         state: absent
 
-    - name: Restart snap
-      command: "snap restart daisytuner-cli.daisytuner-runner"
+          #    - name: Restart snap
+          # command: "snap start daisytuner-cli.daisytuner-runner"

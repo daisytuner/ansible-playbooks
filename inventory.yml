@@ -31,6 +31,7 @@ all:
         #  ansible_python_interpreter: /usr/bin/python3
       vars:
         snap_file: daisytuner-cli_{{ snap_version }}_arm64.snap
+        go_arch: "arm64"
     
     # Partition: bellis4-ci
     raspi4-ci:
@@ -41,6 +42,7 @@ all:
           ansible_python_interpreter: /usr/bin/python3
       vars:
         snap_file: daisytuner-cli_{{ snap_version }}_arm64.snap
+        go_arch: "arm64"
 
     # Partition: bellis5
     raspi5:
@@ -91,6 +93,7 @@ all:
           ansible_python_interpreter: /usr/bin/python3
       vars:
         snap_file: daisytuner-cli_{{ snap_version }}_arm64.snap
+        go_arch: "arm64"
 
     # Partition: bellis5-ci
     raspi5-ci:
@@ -101,6 +104,7 @@ all:
           ansible_python_interpreter: /usr/bin/python3
       vars:
         snap_file: daisytuner-cli_{{ snap_version }}_arm64.snap
+        go_arch: "arm64"
 
     # Partition: tansy
     jetson:
@@ -119,6 +123,7 @@ all:
           ansible_python_interpreter: /usr/bin/python3
       vars:
         snap_file: daisytuner-cli_{{ snap_version }}_arm64.snap
+        go_arch: "arm64"
 
     # Partition: tansy-ci
     jetson-ci:
@@ -129,6 +134,7 @@ all:
           ansible_python_interpreter: /usr/bin/python3
       vars:
         snap_file: daisytuner-cli_{{ snap_version }}_arm64.snap
+        go_arch: "arm64"
 
     # Partition: zinnia-ci
     zinnia-ci:
@@ -139,6 +145,7 @@ all:
           ansible_python_interpreter: /usr/bin/python3
       vars:
         snap_file: daisytuner-cli_{{ snap_version }}_amd64.snap
+        go_arch: "amd64"
 
     # Partition: zinnia
     zinnia:
@@ -149,6 +156,7 @@ all:
           ansible_python_interpreter: /usr/bin/python3
       vars:
         snap_file: daisytuner-cli_{{ snap_version }}_amd64.snap
+        go_arch: "amd64"
 
     # Partition: chamomile-ci
     chamomile-ci:
@@ -159,6 +167,7 @@ all:
           ansible_python_interpreter: /usr/bin/python3
       vars:
         snap_file: daisytuner-cli_{{ snap_version }}_amd64.snap
+        go_arch: "amd64"
 
     # Partition: chamomile
     chamomile:
@@ -169,6 +178,7 @@ all:
           ansible_python_interpreter: /usr/bin/python3
       vars:
         snap_file: daisytuner-cli_{{ snap_version }}_amd64.snap
+        go_arch: "amd64"
 
     all_nodes:
       children:

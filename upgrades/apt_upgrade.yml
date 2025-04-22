@@ -1,6 +1,6 @@
 ---
 - name: Explicitly run APT auto upgrade
-  hosts: all
+  hosts: raspi4,raspi5,jetson
   become: true
 
   tasks:
@@ -8,7 +8,14 @@
       apt:
         update_cache: yes
 
-    - name: Upgrade all packages to latest version
+    - name: Upgrade all packages (normal upgrade)
+      apt:
+        upgrade: yes
+
+    - name: Upgrade all packages to latest version (dist-upgrade)
       apt:
         upgrade: dist
-        update_cache: yes
+
+    - name: Autoremove unnecessary packages
+      apt:
+        autoremove: yes

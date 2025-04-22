@@ -1,5 +1,5 @@
 - name: Setup Perf
-  hosts: raspi4,raspi5,raspi4-ci,raspi5-ci
+  hosts: all
   become: yes
   tasks:
 
