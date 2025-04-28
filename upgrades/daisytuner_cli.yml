@@ -33,5 +33,5 @@
         path: "{{ dest_snap_path }}"
         state: absent
 
-          #    - name: Restart snap
-          # command: "snap start daisytuner-cli.daisytuner-runner"
+    - name: Restart snap
+      command: "snap start daisytuner-cli.daisytuner-runner"
