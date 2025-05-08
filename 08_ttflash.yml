@@ -1,0 +1,22 @@
+- name: Setup Daisytuner CLI
+  hosts: zinnia,chamomile,zinnia-ci,chamomile-ci
+  become: true
+  vars:
+    fw_version: "18.2.0.0"
+  tasks:
+    - name: Set path variables based
+      set_fact:
+        src_path: "/home/daisy/ansible-playbooks/fw_pack-{{ fw_version }}.fwbundle"
+        dest_path: "/opt/tt/fw_pack-{{ fw_version }}.fwbundle"
+
+    - name: Copy file to remote
+      copy:
+        src: "{{ src_path }}"
+        dest: "{{ dest_path }}"
+      register: result
+
+    # TODO Save list of hosts that are out of date
+    
+        #- name: Flash
+        #command: "/opt/tt/bin/python -m tt_flash.main flash --force --fw-tar {{ dest_path }}"
+        #when: result is not skipped

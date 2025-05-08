@@ -1,0 +1,117 @@
+---
+- name: Install Tenstorrent kernel module
+  hosts: zinnia,chamomile,zinnia-ci,chamomile-c,chamomile,zinnia-ci,chamomile-cii
+  become: true
+  vars:
+    fw_version: "18.2.0.0"
+    deb_url: "https://github.com/tenstorrent/tt-system-tools/releases/download/v1.3.1/tenstorrent-tools_1.3.1_all.deb"
+    deb_file: "/tmp/tenstorrent.deb"
+    tt_kmd_path: "/tmp/tt-kmd"
+    tt_venv_path: "/opt/tt"
+  
+  tasks:
+    - name: Install required packages
+      apt:
+        name:
+          - git
+          - dkms
+          - python3
+          - python3-pip
+          - python3-venv
+          - cargo
+        state: present
+      when: ansible_os_family == 'Debian'
+
+    - name: Clone tt-kmd repository
+      git:
+        repo: https://github.com/tenstorrent/tt-kmd.git
+        dest: "{{ tt_kmd_path }}"
+        clone: yes
+        update: yes
+
+    - name: Get current version from script
+      command: ./tools/current-version
+      args:
+        chdir: "{{ tt_kmd_path }}"
+      register: tt_kmd_version
+
+    - name: Check if tenstorrent module version is already added
+      command: dkms status
+      register: dkms_status
+
+    - name: Add DKMS module if not already added
+      command: dkms add .
+      args:
+        chdir: "{{ tt_kmd_path }}"
+      when: "'tenstorrent/' ~ tt_kmd_version.stdout not in dkms_status.stdout"
+
+    - name: Install module with dkms
+      command: dkms autoinstall #"tenstorrent/{{ tt_kmd_version.stdout }}"
+      args:
+        chdir: "{{ tt_kmd_path }}"
+
+    - name: Load tenstorrent module
+      modprobe:
+        name: tenstorrent
+
+    - name: Create tt directory
+      file:
+        path: "{{ tt_venv_path }}"
+        state: directory
+        mode: '0755'
+
+    - name: Create Python virtual environment
+      command: python3 -m venv {{ tt_venv_path }}
+      args:
+        creates: "{{ tt_venv_path }}/bin/activate"
+
+    - name: Install tt-flash in virtual environment
+      command: "{{ tt_venv_path }}/bin/pip install git+https://github.com/tenstorrent/tt-flash.git"
+    
+    - name: Install tt-flash in virtual environment
+      command: "{{ tt_venv_path }}/bin/pip install git+https://github.com/tenstorrent/tt-smi.git"
+
+    - name: Set path variables for firmware bundle
+      set_fact:
+        src_fw_path: "/home/daisy/ansible-playbooks/fw_pack-{{ fw_version }}.fwbundle"
+        dest_fw_path: "/opt/tt/fw_pack-{{ fw_version }}.fwbundle"
+    
+    - name: Copy file to remote
+      copy:
+        src: "{{ src_fw_path }}"
+        dest: "{{ dest_fw_path }}"
+      register: result
+
+    - name: Download Tenstorrent tools .deb package
+      get_url:
+        url: "{{ deb_url }}"
+        dest: "{{ deb_file }}"
+        mode: '0644'
+
+    - name: Install Tenstorrent tools .deb package
+      apt:
+        deb: "{{ deb_file }}"
+
+    - name: Remove tenstorrent tools deb file after installation
+      file:
+        path: "{{ deb_file }}"
+        state: absent
+
+    - name: Enable and start tenstorrent-hugepages.service
+      systemd:
+        name: tenstorrent-hugepages.service
+        enabled: true
+        state: started
+
+    - name: Wait for tenstorrent-hugepages.service to be active
+      command: systemctl is-active tenstorrent-hugepages.service
+      register: hugepages_status
+      retries: 15
+      delay: 2
+      until: hugepages_status.stdout == "active"
+
+    - name: Enable and start dev-hugepages\x2d1G.mount
+      systemd:
+        name: 'dev-hugepages\\x2d1G.mount'
+        enabled: true
+        state: started
