@@ -2,7 +2,7 @@
   hosts: jetson,raspi4,raspi5,chamomile,zinnia
   become: true
   vars:
-    snap_version: "0.1.0"
+    snap_version: "0.1.9"
   tasks:
     - name: Re-template snap_file using snap_version
       set_fact:

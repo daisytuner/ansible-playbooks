@@ -1,5 +1,5 @@
 - name: Install bubblewrap on Linux
-  hosts: all
+  hosts: dahlia
   become: true
   tasks:
     - name: Gather facts

@@ -179,6 +179,17 @@ all:
       vars:
         snap_file: daisytuner-cli_{{ snap_version }}_amd64.snap
         go_arch: "amd64"
+    # Partition: chamomile
+
+    dahlia:
+      hosts:
+        dahlia-001:
+          ansible_host: 192.168.42.77
+          ansible_user: daisy
+          ansible_python_interpreter: /usr/bin/python3
+      vars:
+        snap_file: daisytuner-cli_{{ snap_version }}_amd64.snap
+        go_arch: "amd64"
 
     all_nodes:
       children:

@@ -1,0 +1,18 @@
+---
+- name: Install Tenstorrent kernel module
+  hosts: zinnia, zinnia-ci, chamomile, chamomile-ci
+  
+  tasks:
+    - name: Create tenstorrent wheels dir
+      become: true
+      file:
+        path: /opt/tenstorrent/wheels
+        owner: daisy
+        group: daisy
+        mode: '0755'
+        state: directory
+    - name: Copy tenstorrent wheels
+      ansible.posix.synchronize:
+        src: "/home/daisy/ttnn-support/wheels/"
+        dest: "/opt/tenstorrent/wheels"
+        delete: true

@@ -1,0 +1,18 @@
+- name: Setup Daisytuner CLI
+  hosts: jetson
+  become: true
+  vars:
+    snap_version: "0.1.9"
+  tasks:
+    - name: Stop daisytuner-cli
+      command: "snap stop daisytuner-cli.daisytuner-runner"
+
+    - name: Prune docker
+      command: "docker system prune -a -f"
+
+    - name: Pull docker
+      command: "docker pull daisytuner/jetson:latest"
+
+    - name: Start daisytuner-cli
+      command: "snap start daisytuner-cli.daisytuner-runner"
+

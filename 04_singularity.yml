@@ -1,5 +1,5 @@
 - name: Setup Singularity
-  hosts: all
+  hosts: dahlia
   become: yes
   vars:
     singularity_src_url: "https://github.com/sylabs/singularity/releases/download/v4.2.2/singularity-ce-4.2.2.tar.gz"

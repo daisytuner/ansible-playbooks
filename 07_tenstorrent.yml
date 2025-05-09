@@ -1,6 +1,6 @@
 ---
 - name: Install Tenstorrent kernel module
-  hosts: zinnia,chamomile,zinnia-ci,chamomile-c,chamomile,zinnia-ci,chamomile-cii
+  hosts: dahlia
   become: true
   vars:
     fw_version: "18.2.0.0"
