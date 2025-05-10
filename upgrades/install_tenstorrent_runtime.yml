@@ -1,6 +1,6 @@
 ---
 - name: Install Tenstorrent kernel module
-  hosts: zinnia, zinnia-ci, chamomile, chamomile-ci
+  hosts: dahlia
   
   tasks:
     - name: Create tenstorrent wheels dir

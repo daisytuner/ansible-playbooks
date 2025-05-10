@@ -184,7 +184,15 @@ all:
     dahlia:
       hosts:
         dahlia-001:
-          ansible_host: 192.168.42.77
+          ansible_host: 192.168.0.103
+          ansible_user: daisy
+          ansible_python_interpreter: /usr/bin/python3
+        dahlia-005:
+          ansible_host: 192.168.0.139
+          ansible_user: daisy
+          ansible_python_interpreter: /usr/bin/python3
+        dahlia-002:
+          ansible_host: 192.168.0.135
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
       vars:
