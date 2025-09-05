@@ -1,0 +1,6 @@
+---
+ - hosts: zinnia-0001 zinnia-0002
+   roles:
+    - runner_service_start
+
+

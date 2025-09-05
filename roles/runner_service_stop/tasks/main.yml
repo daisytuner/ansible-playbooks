@@ -1,0 +1,5 @@
+- name: Stop Daisytuner DL service
+  systemd_service:
+    name: daisytuner-dl
+    state: stopped
+  become: true

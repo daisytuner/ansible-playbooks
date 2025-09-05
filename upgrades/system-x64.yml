@@ -1,0 +1,10 @@
+- name: Setup Daisytuner CLI
+  hosts: zinnia,chamomile
+  become: true
+  tasks:
+    - name: Prune docker
+      command: "docker system prune -a -f"
+
+    - name: Pull docker
+      command: "docker pull daisytuner/x64:latest"
+

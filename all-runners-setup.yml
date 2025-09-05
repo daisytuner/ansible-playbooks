@@ -1,0 +1,5 @@
+---
+ - hosts: zinnia zinnia-ci chamomile chamomile-ci aster aster-ci raspi4 raspi4-ci raspi5 raspi5-ci
+   roles:
+    - timezone
+

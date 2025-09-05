@@ -1,0 +1,20 @@
+- name: Pull the appropriate daisytuner image based on host architecture
+  hosts: all
+  become: true
+  vars:
+    image_map:
+      x64: daisytuner/x64
+      arm64: daisytuner/arm64
+      jetson: daisytuner/jetson
+
+  tasks:
+    - name: Set Docker image name based on host variable
+      set_fact:
+        daisytuner_image: "{{ image_map[daisytuner_arch] }}"
+
+    - name: Pull the daisytuner image
+      community.docker.docker_image:
+        name: "{{ daisytuner_image }}"
+        source: pull
+        force_source: true
+

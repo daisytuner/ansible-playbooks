@@ -1,0 +1,71 @@
+
+# - name: Install Debian Prerequisites
+#   import_tasks: debian-prerequisits.yml
+#   when: ansible_facts['os_family']|lower == 'debian'
+
+- name: Clone Tenstorrent Metal repository
+  git:
+    repo: "https://github.com/tenstorrent/tt-metal.git"
+    dest: "/tmp/tt-metal"
+    clone: true
+    depth: 1
+    recursive: true
+    single_branch: true
+    version: "{{ tt_metal_version }}"
+
+- name: Install Dependencies
+  become: true
+  command: "/tmp/tt-metal/install_dependencies.sh --docker"
+
+- name: Build Metal
+  command: "/tmp/tt-metal/build_metal.sh"
+  args:
+    chdir: "/tmp/tt-metal"
+
+- name: Create /opt/tenstorrent directory
+  become: true
+  file:
+    path: "/opt/tenstorrent/metalium/{{ tt_metal_version }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Install Metal
+  become: true
+  command: "cmake --install /tmp/tt-metal/build --prefix /opt/tenstorrent/metalium/{{ tt_metal_version }}"
+
+- name: Find boost-src
+  find:
+    paths: "/tmp/tt-metal/.cpmcache/boost"
+    patterns: "*"
+    file_type: directory
+  register: boost_src_dir
+
+- name: Ensure boost-src directory exists
+  become: true
+  file:
+    path: "/opt/tenstorrent/metalium/{{ tt_metal_version }}/boost-src"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Copy boost-src
+  become: true
+  copy:
+    remote_src: true
+    src: "{{ boost_src_dir.files[0].path }}/libs"
+    dest: "/opt/tenstorrent/metalium/{{ tt_metal_version }}/boost-src"
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Make "generated" dir world-writable
+  become: true
+  file:
+    path: "/opt/tenstorrent/metalium/{{ tt_metal_version }}/libexec/tt-metalium/generated"
+    state: directory
+    owner: root
+    group: root
+    mode: '0777'

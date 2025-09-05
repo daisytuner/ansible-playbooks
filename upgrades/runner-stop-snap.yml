@@ -1,0 +1,8 @@
+- name: Stop Legacy Daisytuner CLI Snap Service
+  hosts: jetson,raspi4,raspi5,chamomile,zinnia
+  become: true
+  tasks:
+
+    - name: Stop Daisytuner snap service
+      command: "snap stop daisytuner-cli"
+

@@ -1,0 +1,6 @@
+fw_version: "18.7.0"
+tt_kmd_path: "/tmp/tt-kmd"
+tt_smi_version: "v3.0.25"
+tt_venv_path: "/opt/tt"
+deb_url: "https://github.com/tenstorrent/tt-system-tools/releases/download/v1.3.1/tenstorrent-tools_1.3.1_all.deb"
+deb_file: "/tmp/tenstorrent.deb"

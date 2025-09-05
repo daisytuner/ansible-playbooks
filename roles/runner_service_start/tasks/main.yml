@@ -1,0 +1,5 @@
+- name: Start Daisytuner DL service
+  systemd_service:
+    name: daisytuner-dl
+    state: started
+  become: true

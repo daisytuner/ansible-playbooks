@@ -1,0 +1,11 @@
+---
+ - hosts: aster-ci
+   roles:
+    - auto_update
+    - upgrade
+    - docker
+    - papi
+    - nvidia-open
+    - runner_service_setup
+
+

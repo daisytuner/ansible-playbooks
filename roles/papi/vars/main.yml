@@ -1,0 +1,2 @@
+papi_src_url: "https://github.com/icl-utk-edu/papi/archive/refs/heads/master.zip"
+papi_build_dir: "/tmp/papi-master"

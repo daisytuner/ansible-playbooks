@@ -1,0 +1,10 @@
+- name: Restart Daisytuner Runner DL
+  hosts: jetson,raspi4,raspi5,chamomile,zinnia
+  tasks:
+
+    - name: Restart Daisytuner DL service
+      systemd_service:
+        name: daisytuner-dl
+        state: restarted
+      become: true
+

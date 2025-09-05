@@ -1,0 +1,5 @@
+- name: Set service to auto-start
+  become: true
+  systemd_service:
+    name: daisytuner-dl
+    enabled: true

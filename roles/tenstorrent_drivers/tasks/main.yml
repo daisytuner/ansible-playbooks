@@ -1,0 +1,77 @@
+
+- name: Install Debian Prerequisites
+  import_tasks: debian-prerequisits.yml
+  when: ansible_facts['os_family']|lower == 'debian'
+
+- name: Clone tt-kmd repository
+  git:
+    repo: https://github.com/tenstorrent/tt-kmd.git
+    dest: "{{ tt_kmd_path }}"
+    clone: yes
+    update: yes
+
+- name: Get current version from script
+  command: ./tools/current-version
+  args:
+    chdir: "{{ tt_kmd_path }}"
+  register: tt_kmd_version
+
+- name: Check if tenstorrent module version is already added
+  become: true
+  command: dkms status
+  register: dkms_status
+
+- name: Add DKMS module if not already added
+  become: true
+  command: dkms add .
+  args:
+    chdir: "{{ tt_kmd_path }}"
+  when: "'tenstorrent/' ~ tt_kmd_version.stdout not in dkms_status.stdout"
+
+- name: Install module with dkms
+  become: true
+  command: dkms autoinstall #"tenstorrent/{{ tt_kmd_version.stdout }}"
+  args:
+    chdir: "{{ tt_kmd_path }}"
+
+- name: Load tenstorrent module
+  become: true
+  modprobe:
+    name: tenstorrent
+
+- name: Create tt directory
+  become: true
+  file:
+    path: "{{ tt_venv_path }}"
+    state: directory
+    mode: '0755'
+
+- name: Create Python virtual environment
+  become: true
+  command: python3 -m venv {{ tt_venv_path }}
+  args:
+    creates: "{{ tt_venv_path }}/bin/activate"
+
+- name: Install tt-flash in virtual environment
+  become: true
+  command: "{{ tt_venv_path }}/bin/pip install git+https://github.com/tenstorrent/tt-flash.git"
+
+- name: Install tt-smi in virtual environment
+  become: true
+  command: "{{ tt_venv_path }}/bin/pip install git+https://github.com/tenstorrent/tt-smi.git@{{ tt_smi_version }}"
+
+- name: Set path variables for firmware bundle
+  set_fact:
+    src_fw_path: "fw_pack-{{ fw_version }}.fwbundle"
+    dest_fw_path: "/opt/tt/fw_pack-{{ fw_version }}.fwbundle"
+
+- name: Copy file to remote
+  become: true
+  copy:
+    src: "{{ src_fw_path }}"
+    dest: "{{ dest_fw_path }}"
+  register: result
+
+- name: Handle huge-pages for debian-based systems
+  import_tasks: debian-hugepages.yml
+  when: ansible_facts['os_family']|lower == 'debian'

@@ -1,6 +1,6 @@
 ---
 - name: Install Docker on Ubuntu hosts
-  hosts: dahlia
+  hosts: aster
   become: true
 
   tasks:
@@ -27,7 +27,7 @@
 
     - name: Add Docker repository to APT sources
       apt_repository:
-        repo: "deb [arch={{ ansible_architecture }} signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu mantic stable"
+        repo: "deb [arch={{ go_arch }} signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu mantic stable"
         state: present
         filename: docker
 

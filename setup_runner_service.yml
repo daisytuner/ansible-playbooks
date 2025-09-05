@@ -1,0 +1,5 @@
+---
+ - hosts: zinnia chamomile aster-0001 aster-0002
+   roles:
+    - runner_service_setup
+

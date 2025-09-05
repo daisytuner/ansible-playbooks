@@ -1,0 +1,6 @@
+---
+ - hosts: aster
+   roles:
+    - runner_service_start
+
+

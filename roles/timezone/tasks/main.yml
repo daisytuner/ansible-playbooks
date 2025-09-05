@@ -1,0 +1,4 @@
+ - name: Set Timezone to Europe/Berlin
+   become: true
+   community.general.timezone:
+     name: Europe/Berlin

@@ -1,6 +1,6 @@
 ---
 - name: Disable APT Auto Updates
-  hosts: dahlia
+  hosts: aster
   become: true
 
   tasks:

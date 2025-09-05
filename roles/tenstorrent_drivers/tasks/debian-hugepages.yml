@@ -1,0 +1,30 @@
+
+- name: Download Tenstorrent tools .deb package
+  get_url:
+    url: "{{ deb_url }}"
+    dest: "{{ deb_file }}"
+    mode: '0644'
+
+- name: Install Tenstorrent tools .deb package
+  become: true
+  apt:
+    deb: "{{ deb_file }}"
+
+- name: Remove tenstorrent tools deb file after installation
+  file:
+    path: "{{ deb_file }}"
+    state: absent
+
+- name: Enable and start tenstorrent-hugepages.service
+  become: true
+  systemd:
+    name: tenstorrent-hugepages.service
+    enabled: true
+    state: started
+
+- name: Enable and start dev-hugepages\x2d1G.mount
+  become: true
+  systemd:
+    name: 'dev-hugepages\x2d1G.mount'
+    enabled: true
+    state: started

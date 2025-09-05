@@ -1,0 +1,5 @@
+---
+ - hosts: dahlia-0003 dahlia-0002
+   roles:
+    - tenstorrent_runtime
+

@@ -1,0 +1,60 @@
+- name: Install Dependencies
+  package:
+    name:
+      - unzip
+      - build-essential
+    state: present
+  become: yes
+
+- name: Download source code
+  become: yes
+  get_url:
+    url: "{{ papi_src_url }}"
+    dest: "/tmp/master.zip"
+    mode: '0644'
+
+- name: Extract source
+  become: yes
+  ansible.builtin.unarchive:
+    src: "/tmp/master.zip"
+    dest: "/tmp/"
+    remote_src: yes
+
+- name: Configure
+  become: yes
+  command:
+    cmd: ./configure --prefix=/opt/papi
+    chdir: "{{ papi_build_dir }}/src"
+
+- name: Compile
+  become: yes
+  command:
+    cmd: make
+    chdir: "{{ papi_build_dir }}/src"
+
+- name: Install
+  become: yes
+  command:
+    cmd: make install
+    chdir: "{{ papi_build_dir }}/src"
+
+- name: Add PAPI paths to ~/.bashrc
+  become: yes
+  ansible.builtin.blockinfile:
+    path: ~/.bashrc
+    block: |
+      # PAPI environment variables
+      export PATH=$PATH:/opt/papi/bin
+      export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/papi/lib
+      export CPATH=$CPATH:/opt/papi/include
+      export LIBRARY_PATH=$LIBRARY_PATH:/opt/papi/lib
+    marker: "# {mark} ANSIBLE MANAGED BLOCK"
+    create: yes
+    state: present
+
+- name: Source ~/.bashrc
+  become: yes
+  ansible.builtin.shell: source ~/.bashrc
+  args:
+    executable: /bin/bash
+  changed_when: false

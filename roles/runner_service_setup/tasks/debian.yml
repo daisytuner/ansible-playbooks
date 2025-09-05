@@ -1,0 +1,91 @@
+
+- name: Install required packages
+  become: true
+  apt:
+    name:
+      - coreutils
+    state: present
+    update_cache: yes
+
+- name: Install NVM
+  shell: >
+    wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+  args:
+    executable: /bin/bash
+    creates: ~/.nvm/nvm.sh
+
+- name: Install Node v20
+  shell: >
+    . {{ ansible_env.HOME }}/.nvm/nvm.sh && nvm install 20
+  args:
+    executable: /bin/bash
+
+- name: Capture full Node version
+  shell: >
+    . {{ ansible_env.HOME }}/.nvm/nvm.sh && nvm current
+  args:
+    executable: /bin/bash
+  register: node_version
+
+- name: Select runner-specific files
+  set_fact:
+    runner_dl_file: "{{ runner_dl_file_templated }}"
+  vars:
+    runner_dl_file_templated: "{{ runner_dl_file }}"
+
+- name: Create directory for Runner DL
+  become: true
+  file:
+    path: "/var/lib/daisytuner/runner-dl/v{{ dl_version }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+
+- name: Extract Runner DL onto remote
+  become: true
+  unarchive:
+    src: "/home/daisy/ansible-playbooks/{{ runner_dl_file }}"
+    dest: "/var/lib/daisytuner/runner-dl/v{{ dl_version }}"
+    owner: root
+    group: root
+
+- name: Create stable symlink to current Runner DL
+  become: true
+  file:
+    src: "/var/lib/daisytuner/runner-dl/v{{ dl_version }}"
+    dest: "/var/lib/daisytuner/runner-dl/current"
+    state: link
+    owner: root
+    group: root
+
+- name: Capture root PATH
+  become: true
+  set_fact:
+    org_path: "{{ lookup('pipe', 'echo $PATH') }}"
+
+- name: Create Runner ENV file
+  become: true
+  copy:
+    content: |
+      PATH={{ ansible_env.HOME }}/.nvm/versions/node/{{ node_version.stdout }}/bin:{{ org_path }}
+      DAISYTUNER_TMP=/tmp/jobs
+    dest: "/var/lib/daisytuner/runner-dl/env"
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Create systemd service for Daisytuner Runner DL
+  become: true
+  copy:
+    src: "daisytuner-dl.service"
+    dest: "/etc/systemd/system/daisytuner-dl.service"
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Ensure systemd service is reloaded
+  become: true
+  systemd_service:
+    daemon_reload: true

@@ -1,0 +1,8 @@
+
+- name: Update all packages to the latest version
+  become: yes
+  apt:
+    autoremove: yes
+    autoclean: yes
+    upgrade: yes
+    update_cache: yes

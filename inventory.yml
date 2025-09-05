@@ -31,7 +31,9 @@ all:
         #  ansible_python_interpreter: /usr/bin/python3
       vars:
         snap_file: daisytuner-cli_{{ snap_version }}_arm64.snap
+        runner_dl_file: runner-dl-v{{ dl_version }}-arm64.tgz
         go_arch: "arm64"
+        daisytuner_arch: "arm64"
     
     # Partition: bellis4-ci
     raspi4-ci:
@@ -41,8 +43,10 @@ all:
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
       vars:
+        runner_dl_file: runner-dl-v{{ dl_version }}-arm64.tgz
         snap_file: daisytuner-cli_{{ snap_version }}_arm64.snap
         go_arch: "arm64"
+        daisytuner_arch: "arm64"
 
     # Partition: bellis5
     raspi5:
@@ -92,8 +96,10 @@ all:
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
       vars:
+        runner_dl_file: runner-dl-v{{ dl_version }}-arm64.tgz
         snap_file: daisytuner-cli_{{ snap_version }}_arm64.snap
         go_arch: "arm64"
+        daisytuner_arch: "arm64"
 
     # Partition: bellis5-ci
     raspi5-ci:
@@ -103,8 +109,10 @@ all:
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
       vars:
+        runner_dl_file: runner-dl-v{{ dl_version }}-arm64.tgz
         snap_file: daisytuner-cli_{{ snap_version }}_arm64.snap
         go_arch: "arm64"
+        daisytuner_arch: "arm64"
 
     # Partition: tansy
     jetson:
@@ -122,8 +130,10 @@ all:
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
       vars:
+        runner_dl_file: runner-dl-v{{ dl_version }}-arm64.tgz
         snap_file: daisytuner-cli_{{ snap_version }}_arm64.snap
         go_arch: "arm64"
+        daisytuner_arch: "jetson"
 
     # Partition: tansy-ci
     jetson-ci:
@@ -133,8 +143,10 @@ all:
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
       vars:
+        runner_dl_file: runner-dl-v{{ dl_version }}-arm64.tgz
         snap_file: daisytuner-cli_{{ snap_version }}_arm64.snap
         go_arch: "arm64"
+        daisytuner_arch: "jetson"
 
     # Partition: zinnia-ci
     zinnia-ci:
@@ -144,19 +156,33 @@ all:
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
       vars:
+        runner_dl_file: runner-dl-v{{ dl_version }}-x64.tgz
         snap_file: daisytuner-cli_{{ snap_version }}_amd64.snap
         go_arch: "amd64"
+        daisytuner_arch: "x64"
+        cuda_host_arch: "x86_64"
 
     # Partition: zinnia
     zinnia:
       hosts:
+        zinnia-0001:
+          ansible_host: 192.168.2.31
+          ansible_user: daisy
+          ansible_python_interpreter: /usr/bin/python3
+        zinnia-0002:
+          ansible_host: 192.168.2.32
+          ansible_user: daisy
+          ansible_python_interpreter: /usr/bin/python3
         zinnia-0003:
-          ansible_host: 192.168.42.79
+          ansible_host: 192.168.2.33
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
       vars:
+        runner_dl_file: runner-dl-v{{ dl_version }}-x64.tgz
         snap_file: daisytuner-cli_{{ snap_version }}_amd64.snap
         go_arch: "amd64"
+        daisytuner_arch: "x64"
+        cuda_host_arch: "x86_64"
 
     # Partition: chamomile-ci
     chamomile-ci:
@@ -166,38 +192,96 @@ all:
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
       vars:
+        runner_dl_file: runner-dl-v{{ dl_version }}-x64.tgz
         snap_file: daisytuner-cli_{{ snap_version }}_amd64.snap
         go_arch: "amd64"
+        daisytuner_arch: "x64"
+        cuda_host_arch: "x86_64"
 
     # Partition: chamomile
     chamomile:
       hosts:
+        chamomile-0001:
+          ansible_host: 192.168.2.11
+          ansible_user: daisy
+          ansible_python_interpreter: /usr/bin/python3
+        chamomile-0002: 
+          ansible_host: 192.168.2.12
+          ansible_user: daisy
+          ansible_python_interpreter: /usr/bin/python3
         chamomile-0003:
-          ansible_host: 192.168.42.78
+          ansible_host: 192.168.2.13
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
       vars:
+        runner_dl_file: runner-dl-v{{ dl_version }}-x64.tgz
         snap_file: daisytuner-cli_{{ snap_version }}_amd64.snap
         go_arch: "amd64"
-    # Partition: chamomile
+        daisytuner_arch: "x64"
+        cuda_host_arch: "x86_64"
 
     dahlia:
       hosts:
         dahlia-001:
-          ansible_host: 192.168.0.103
+          ansible_host: 192.168.42.77
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
         dahlia-005:
           ansible_host: 192.168.0.139
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
-        dahlia-002:
-          ansible_host: 192.168.0.135
+        dahlia-0002:
+          ansible_host: 192.168.42.75
+          ansible_user: daisy
+          ansible_python_interpreter: /usr/bin/python3
+        dahlia-0003:
+          ansible_host: 192.168.42.73
+          ansible_user: daisy
+          ansible_python_interpreter: /usr/bin/python3
+        dahlia-0004:
+          ansible_host: 192.168.42.71
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
       vars:
+        runner_dl_file: runner-dl-v{{ dl_version }}-x64.tgz
         snap_file: daisytuner-cli_{{ snap_version }}_amd64.snap
         go_arch: "amd64"
+
+    # Partition: aster 
+    aster:
+      hosts:
+        aster-0001:
+          ansible_host: 192.168.2.51
+          ansible_user: daisy
+          ansible_python_interpreter: /usr/bin/python3
+        aster-0002:
+          ansible_host: 192.168.2.52
+          ansible_user: daisy
+          ansible_python_interpreter: /usr/bin/python3
+        aster-0003:
+          ansible_host: 192.168.2.53
+          ansible_user: daisy
+          ansible_python_interpreter: /usr/bin/python3
+      vars:
+        runner_dl_file: runner-dl-v{{ dl_version }}-arm64.tgz
+        snap_file: daisytuner-cli_{{ snap_version }}_arm64.snap
+        go_arch: "arm64"
+        daisytuner_arch: "arm64"
+        cuda_host_arch: "sbsa"
+
+    # Partition: aster-ci
+    aster-ci:
+      hosts:
+        aster-0004:
+          ansible_host: 192.168.42.68
+          ansible_user: daisy
+          ansible_python_interpreter: /usr/bin/python3
+      vars:
+        runner_dl_file: runner-dl-v{{ dl_version }}-x64.tgz
+        snap_file: daisytuner-cli_{{ snap_version }}_amd64.snap
+        go_arch: "arm64"
+        daisytuner_arch: "arm64"
+        cuda_host_arch: "sbsa"
 
     all_nodes:
       children:
@@ -211,3 +295,5 @@ all:
         chamomile-ci:
         zinnia:
         chamomile:
+        aster:
+        aster-ci:
