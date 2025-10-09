@@ -1,5 +1,5 @@
 ---
- - hosts: dahlia-0003 dahlia-0002
+ - hosts: chamomile
    roles:
     - tenstorrent_runtime
 
