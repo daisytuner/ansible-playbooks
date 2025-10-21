@@ -1,5 +1,5 @@
 ---
- - hosts: chamomile-0001 chamomile-0002 chamomile-0003 chamomile-ci
+ - hosts: chamomile-0001 chamomile-0002 chamomile-0003 #chamomile-ci
    roles:
     # - auto_update
     # - upgrade
