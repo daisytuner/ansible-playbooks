@@ -30,7 +30,7 @@
   apt:
     update_cache: yes
     name:
-      - nvidia-open
+      - cuda-drivers
       - cuda-toolkit-12-8
     state: present
 

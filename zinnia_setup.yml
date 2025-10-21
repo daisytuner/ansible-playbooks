@@ -1,12 +1,13 @@
 ---
- - hosts: zinnia-0003
+ - hosts: zinnia-0001 zinnia-0002 zinnia-0003 zinnia-ci
    roles:
     # - auto_update
     # - upgrade
     # - docker
     # - papi
     # - nvidia-open
-    - tenstorrent_drivers
+    - nvidia-proprietary
+    # - tenstorrent_drivers
     # - runner_service_setup
     # - runner_service_autostart
 

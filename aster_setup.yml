@@ -5,7 +5,8 @@
     # - upgrade
     # - docker
     # - papi
-    - nvidia-open
+    # - nvidia-open
+    - nvidia-proprietary
     # - runner_service_setup
     # - runner_service_autostart
 

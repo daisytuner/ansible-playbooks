@@ -1,11 +1,12 @@
 ---
- - hosts: chamomile-0001 chamomile-0002
+ - hosts: chamomile-0001 chamomile-0002 chamomile-0003 chamomile-ci
    roles:
     # - auto_update
     # - upgrade
     # - docker
     # - papi
-    - nvidia-open
+    # - nvidia-open
+    - nvidia-proprietary
     # - tenstorrent_drivers
     # - runner_service_setup
     # - runner_service_autostart
