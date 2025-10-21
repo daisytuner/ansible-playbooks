@@ -222,11 +222,11 @@ all:
 
     dahlia:
       hosts:
-        dahlia-001:
+        dahlia-0001:
           ansible_host: 192.168.42.77
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
-        dahlia-005:
+        dahlia-0005:
           ansible_host: 192.168.0.139
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
@@ -246,6 +246,8 @@ all:
         runner_dl_file: runner-dl-v{{ dl_version }}-x64.tgz
         snap_file: daisytuner-cli_{{ snap_version }}_amd64.snap
         go_arch: "amd64"
+        daisytuner_arch: "x64"
+        cuda_host_arch: "x86_64"
 
     beast:
       hosts:

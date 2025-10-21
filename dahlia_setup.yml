@@ -1,0 +1,13 @@
+---
+ - hosts: dahlia-0001
+   roles:
+    # - auto_update
+    # - upgrade
+    # - docker
+    # - papi
+    - nvidia-open
+    # - tenstorrent_drivers
+    # - runner_service_setup
+    # - runner_service_autostart
+
+

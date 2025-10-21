@@ -9,6 +9,7 @@
     dest: "{{ tt_kmd_path }}"
     clone: yes
     update: yes
+    version: "{{ tt_kmd_version }}"
 
 - name: Get current version from script
   command: ./tools/current-version
