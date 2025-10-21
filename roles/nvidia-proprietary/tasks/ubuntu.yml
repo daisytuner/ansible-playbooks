@@ -24,6 +24,13 @@
       - nvidia-driver-575-server-open
       - nvidia-driver-570-server
     state: absent
+    autoremove: yes
+
+- name: Reboot the system
+  become: true
+  ansible.builtin.reboot:
+    msg: "Rebooting to apply Nvidia driver changes"
+    reboot_timeout: 600
 
 - name: Install Nvidia Driver & CUDA Toolkit
   become: true
@@ -33,6 +40,12 @@
       - cuda-drivers
       - cuda-toolkit-12-8
     state: present
+
+- name: Reboot the system
+  become: true
+  ansible.builtin.reboot:
+    msg: "Rebooting to apply Nvidia driver changes"
+    reboot_timeout: 600
 
 - name: Setup Nvidia Container Toolkit repo
   become: true
