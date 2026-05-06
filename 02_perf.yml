@@ -1,5 +1,5 @@
 - name: Setup Perf
-  hosts: dahlia
+  hosts: dahlia-0001
   become: yes
   tasks:
 

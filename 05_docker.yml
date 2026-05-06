@@ -1,6 +1,6 @@
 ---
 - name: Install Docker on Ubuntu hosts
-  hosts: aster
+  hosts: dahlia-0003
   become: true
 
   tasks:

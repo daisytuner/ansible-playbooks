@@ -1,0 +1,15 @@
+---
+ - hosts: zinnia-ci
+   roles:
+    # - auto_update
+    # - upgrade
+    # - docker
+    # - papi
+    # - nvidia-open
+    # - nvidia-proprietary
+    # - tenstorrent_drivers
+    - runner_service_setup
+    - runner_service_autostart
+    - runner_service_start
+
+

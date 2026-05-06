@@ -46,7 +46,7 @@
 - name: Extract Runner DL onto remote
   become: true
   unarchive:
-    src: "/home/daisy/ansible-playbooks/{{ runner_dl_file }}"
+    src: "{{ runner_dl_file }}"
     dest: "/var/lib/daisytuner/runner-dl/v{{ dl_version }}"
     owner: root
     group: root

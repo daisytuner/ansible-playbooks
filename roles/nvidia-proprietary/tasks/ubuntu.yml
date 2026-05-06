@@ -37,7 +37,7 @@
   apt:
     update_cache: yes
     name:
-      - cuda-drivers
+      - cuda-drivers-575
       - cuda-toolkit-12-8
     state: present
 
