@@ -1,0 +1,98 @@
+
+- name: Install AMDGPU repo package
+  become: true
+  shell: |
+    wget https://repo.radeon.com/amdgpu-install/7.2.3/ubuntu/noble/amdgpu-install_7.2.3.70203-1_all.deb
+    sudo dpkg -i amdgpu-install_7.2.3.70203-1_all.deb
+  args:
+    creates: /etc/apt/sources.list.d/amdgpu.list
+
+- name: Update apt cache
+  become: true
+  apt:
+    update_cache: yes
+
+- name: Install kernel headers and modules
+  become: true
+  apt:
+    name:
+      - "linux-headers-{{ ansible_kernel }}"
+      - "linux-modules-extra-{{ ansible_kernel }}"
+    state: present
+
+- name: Install AMDGPU DKMS driver
+  become: true
+  apt:
+    name:
+      - amdgpu-dkms
+    state: present
+
+- name: Reboot the system
+  become: true
+  ansible.builtin.reboot:
+    msg: "Rebooting to apply AMDGPU driver changes"
+    reboot_timeout: 600
+
+- name: Install ROCm prerequisites
+  become: true
+  apt:
+    name:
+      - python3-setuptools
+      - python3-wheel
+    state: present
+
+- name: Add user to render and video groups
+  become: true
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    groups:
+      - render
+      - video
+    append: yes
+
+- name: Install ROCm
+  become: true
+  apt:
+    name:
+      - rocm
+    state: present
+
+- name: Ensure apt keyrings directory exists
+  become: true
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: "0755"
+
+- name: Add AMD Container Toolkit GPG key
+  become: true
+  shell: |
+    wget https://repo.radeon.com/rocm/rocm.gpg.key -O - | gpg --dearmor | sudo tee /etc/apt/keyrings/rocm.gpg > /dev/null
+  args:
+    creates: /etc/apt/keyrings/rocm.gpg
+
+- name: Add AMD Container Toolkit repo
+  become: true
+  ansible.builtin.copy:
+    content: "deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/amd-container-toolkit/apt/ noble main"
+    dest: /etc/apt/sources.list.d/amd-container-toolkit.list
+  args:
+    creates: /etc/apt/sources.list.d/amd-container-toolkit.list
+
+- name: Install AMD Container Toolkit
+  become: true
+  apt:
+    update_cache: yes
+    name:
+      - amd-container-toolkit
+    state: present
+
+- name: Configure AMD Container Toolkit runtime
+  become: true
+  command: amd-ctk runtime configure
+
+- name: Restart Docker
+  become: true
+  ansible.builtin.systemd:
+    name: docker
+    state: restarted
