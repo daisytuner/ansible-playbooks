@@ -76,8 +76,6 @@
   ansible.builtin.copy:
     content: "deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/amd-container-toolkit/apt/ noble main"
     dest: /etc/apt/sources.list.d/amd-container-toolkit.list
-  args:
-    creates: /etc/apt/sources.list.d/amd-container-toolkit.list
 
 - name: Install AMD Container Toolkit
   become: true
