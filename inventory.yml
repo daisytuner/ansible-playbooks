@@ -152,7 +152,7 @@ all:
     zinnia-ci:
       hosts:
         zinnia-0004:
-          ansible_host: 192.168.42.118
+          ansible_host: 192.168.2.34
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
       vars:
@@ -188,7 +188,7 @@ all:
     chamomile-ci:
       hosts:
         chamomile-0004:
-          ansible_host: 192.168.42.108
+          ansible_host: 192.168.2.14
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
       vars:
