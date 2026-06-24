@@ -1,0 +1,7 @@
+---
+ - hosts: raspi4-ci raspi4 raspi5 raspi5-ci jetson jetson-ci
+   roles:
+    - upgrade
+    - system-reboot
+
+
