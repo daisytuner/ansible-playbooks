@@ -17,10 +17,10 @@ all:
           ansible_host: raspi4-0003.lan
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
-        raspi4-0004:
-          ansible_host: raspi4-0004.lan
-          ansible_user: daisy
-          ansible_python_interpreter: /usr/bin/python3
+        #raspi4-0004:
+        #  ansible_host: raspi4-0004.lan
+        #  ansible_user: daisy
+        #  ansible_python_interpreter: /usr/bin/python3
         raspi4-0005:
           ansible_host: raspi4-0005.lan
           ansible_user: daisy
@@ -87,10 +87,10 @@ all:
           ansible_host: raspi5-0010.lan
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
-        raspi5-0011:
-          ansible_host: raspi5-0011.lan
-          ansible_user: daisy
-          ansible_python_interpreter: /usr/bin/python3
+        #raspi5-0011:
+        #  ansible_host: raspi5-0011.lan
+        #  ansible_user: daisy
+        #  ansible_python_interpreter: /usr/bin/python3
       vars:
         runner_dl_file: runner-dl-v{{ dl_version }}-arm64.tgz
         snap_file: daisytuner-cli_{{ snap_version }}_arm64.snap
@@ -293,10 +293,10 @@ all:
           ansible_host: aster-0002.colo
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
-        aster-0003:
-          ansible_host: aster-0003.colo
-          ansible_user: daisy
-          ansible_python_interpreter: /usr/bin/python3
+        #aster-0003:
+        #  ansible_host: aster-0003.colo
+        #  ansible_user: daisy
+        #  ansible_python_interpreter: /usr/bin/python3
       vars:
         runner_dl_file: runner-dl-v{{ dl_version }}-arm64.tgz
         snap_file: daisytuner-cli_{{ snap_version }}_arm64.snap
@@ -307,10 +307,10 @@ all:
     # Partition: aster-ci
     aster-ci:
       hosts:
-        aster-0004:
-          ansible_host: aster-0004.colo
-          ansible_user: daisy
-          ansible_python_interpreter: /usr/bin/python3
+        #aster-0004:
+        #  ansible_host: aster-0004.colo
+        #  ansible_user: daisy
+        #  ansible_python_interpreter: /usr/bin/python3
       vars:
         runner_dl_file: runner-dl-v{{ dl_version }}-x64.tgz
         snap_file: daisytuner-cli_{{ snap_version }}_amd64.snap

@@ -1,4 +1,9 @@
 
+- name: Ensure current apt-cache state
+  apt:
+    update_cache: yes
+  become: yes
+  
 - name: Ensure standard packages are installed
   package:
     name:
