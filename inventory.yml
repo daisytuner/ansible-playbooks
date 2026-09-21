@@ -246,6 +246,18 @@ all:
           ansible_host: dahlia-0007.lan
           ansible_user: daisy
           ansible_python_interpreter: /usr/bin/python3
+        dahlia-0008: # amd GPU
+          ansible_host: dahlia-0008.lan
+          ansible_user: daisy
+          ansible_python_interpreter: /usr/bin/python3
+        dahlia-0009: # amd GPU
+          ansible_host: dahlia-0009.lan
+          ansible_user: daisy
+          ansible_python_interpreter: /usr/bin/python3
+        dahlia-0010: # amd GPU
+          ansible_host: dahlia-0010.lan
+          ansible_user: daisy
+          ansible_python_interpreter: /usr/bin/python3
       vars:
         runner_dl_file: runner-dl-v{{ dl_version }}-x64.tgz
         snap_file: daisytuner-cli_{{ snap_version }}_amd64.snap
@@ -320,3 +332,4 @@ all:
         chamomile:
         aster:
         aster-ci:
+        dahlia:

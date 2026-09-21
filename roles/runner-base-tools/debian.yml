@@ -1,0 +1,25 @@
+
+- name: Ensure standard packages are installed
+  become: yes
+  tasks:
+
+    - name: Install Dependencies
+      package:
+        name:
+          - wget
+          - curl
+          - gnupg2
+          - software-properties-common
+          - build-essential
+          - cmake
+          - ninja-build
+          - git
+          - git-lfs
+          - pkg-config
+          - unzip
+          - file
+        state: present
+      become: yes
+
+    - name: Initialize Git LFS
+      command: git lfs install
